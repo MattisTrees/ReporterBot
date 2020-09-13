@@ -7,6 +7,8 @@ const reporterBot = new Discord.Client();
 const EtherScanKey = '';
 // Wallet Address
 const DAOWallet = '';
+// Discord bot token
+const BotToken = '';
 
 const prefix = '!';
 
@@ -96,4 +98,4 @@ reporterBot.on('message', async message =>{
 
 
 // * * * THIS NEEDS TO BE THE LAST LINE IN THE FILE * * * 
-reporterBot.login('NzU0NDM4MjMwMTU3Mjk1Njc5.X10vWg.gYRpuOA8PgwcUPOqSwQeyUXZVJg');
+reporterBot.login(BotToken);
