@@ -1,0 +1,22 @@
+{
+  "name": "reporter-bot",
+  "version": "1.0.0",
+  "description": "A Basic discord bot that reports the contents of a wallet as reported by etherscan",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MattisTrees/ReporterBot.git"
+  },
+  "author": "Matt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MattisTrees/ReporterBot/issues"
+  },
+  "homepage": "https://github.com/MattisTrees/ReporterBot#readme",
+  "dependencies": {
+    "discord.js": "^12.3.1"
+  }
+}
