@@ -1,7 +1,8 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 
-const reporterBot = new Discord.Client();
+// Client represents the bot
+const client = new Discord.Client();
 
 // APIKEY
 const EtherScanKey = '';
@@ -12,11 +13,41 @@ const BotToken = '';
 
 const prefix = '!';
 
-reporterBot.once('ready', () => {
+client.once('ready', async () => {
+
     console.log('Reporter Bot is online!');
+    //console.log( await walletContents());
+
+    // Call to hourly message function goes here with setTimeout
+    setTimeout(function(){ // in leftToEight() milliseconds run this:
+
+        sendMessage(); // send the message once
+
+        var dayMillseconds = 1000 * 60 * 60; // define one hour in miliseconds
+
+        setInterval(function(){ // repeat this once an hour
+            sendMessage();
+        }, dayMillseconds)
+        
+    }, leftToEight());
+
 });
 
-reporterBot.on('message', async message =>{
+function leftToEight(){
+    var d = new Date();
+    return (-d + d.setHours(8,0,0,0));
+}
+
+async function sendMessage(){
+    
+    const channel = await client.channels.fetch('754436028894544034');
+
+    channel.send(await walletContents());
+
+} // end sendMessage function
+
+client.on('message', async message =>{
+
     if(!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
@@ -24,6 +55,7 @@ reporterBot.on('message', async message =>{
 
     if(command === 'ping'){
         message.channel.send('pong');
+
     } else if (command === 'help'){
         message.channel.send('Here are some commands you can tell me to do:' +
         '\n    !help - Brings you here, where I describe my applicable commands.' +
@@ -34,68 +66,84 @@ reporterBot.on('message', async message =>{
         '\n\nSome commands I will have soon:' +
         '\n    !assets - Post the price of a selection of crypto assets.' +
         '\n\nIn the future I will also make a post everytime an asset gets ' +
-        'dropped into the DAO\'s wallet.'
+        'dropped into the DAO\'s wallet. Will also post once an hour to a channel and ' +
+        'report the contents of the wallet and the USD value of all the tokens.'
         );
+
     } else if(command === 'shutup'){
+        
         message.channel.send('No You!');
+
     } else if(command === 'meow'){
 
         const { file } = await fetch('https://aws.random.cat/meow').then(response => response.json());
 
         message.channel.send(file);
+
     } else if (command === 'wallet'){
 
-        try{
-            const ETH = await fetch('https://api.etherscan.io/api?module=account&action=balance&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
-            // contract address for USDC 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48
-            const USDC = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
-            // contract address for MKR 0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2
-            const MKR = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
-            // contract address for BAL 0xba100000625a3754423978a60c9317c58a424e3d
-            const BAL = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xba100000625a3754423978a60c9317c58a424e3d&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
-            // contract address for OMG 0xd26114cd6EE289AccF82350c8d8487fedB8A0C07
-            const OMG = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xd26114cd6EE289AccF82350c8d8487fedB8A0C07&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
-            // contract address for REN 0x408e41876cccdc0f92210600ef50372656052a38
-            const REN = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x408e41876cccdc0f92210600ef50372656052a38&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
-            // contract address for ZRX 0xe41d2489571d322189246dafa5ebde1f4699f498
-            const ZRX = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xe41d2489571d322189246dafa5ebde1f4699f498&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
-            // contract address for BAT 0x0d8775f648430679a709e98d2b0cb6250d2887ef
-            const BAT = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x0d8775f648430679a709e98d2b0cb6250d2887ef&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
-            // contract address for BNT 0x1f573d6fb3f13d689ff844b4ce37794d79a7ff1c
-            const BNT = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x1f573d6fb3f13d689ff844b4ce37794d79a7ff1c&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
-            // contract address for KNC 0xdd974d5c2e2928dea5f71b9825b8b646686bd200
-            const KNC = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xdd974d5c2e2928dea5f71b9825b8b646686bd200&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
-            // contract address for DAI 0x6b175474e89094c44da98b954eedeac495271d0f
-            const DAI = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x6b175474e89094c44da98b954eedeac495271d0f&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
-            // contract address for LEND 0x80fB784B7eD66730e8b1DBd9820aFD29931aab03
-            const LEND = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x80fB784B7eD66730e8b1DBd9820aFD29931aab03&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
-            
-            const wallet = '```ETH          ' + (ETH.result/1000000000000000000) +
-                            '\nUSDC         ' + (USDC.result/1000000) +
-                            '\nMKR          ' + (MKR.result/1000000000000000000) +
-                            '\nBAL          ' + (BAL.result/1000000000000000000) +
-                            '\nOMG          ' + (OMG.result/1000000000000000000) +
-                            '\nREN          ' + (REN.result/1000000000000000000) +
-                            '\nZRX          ' + (ZRX.result/1000000000000000000) +
-                            '\nBAT          ' + (BAT.result/1000000000000000000) + 
-                            '\nBNT          ' + (BNT.result/1000000000000000000) +
-                            '\nKNC          ' + (KNC.result/1000000000000000000) +
-                            '\nDAI          ' + (DAI.result/1000000000000000000) +
-                            '\nLEND         ' + (LEND.result/1000000000000000000)+
-                            '```';
-
-            message.channel.send(wallet);
-
-        } catch(error) {
-            message.channel.send(error.message);
-        } // end try/catch block
+            message.channel.send( await walletContents());
 
     }   // * * * add more commands here * * * 
     
 });
 
+async function walletContents(){
+
+    
+
+    try{
+        const ETH = await fetch('https://api.etherscan.io/api?module=account&action=balance&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
+        // contract address for USDC 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48
+        const USDC = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
+        // contract address for MKR 0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2
+        const MKR = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
+        // contract address for BAL 0xba100000625a3754423978a60c9317c58a424e3d
+        const BAL = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xba100000625a3754423978a60c9317c58a424e3d&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
+        // contract address for OMG 0xd26114cd6EE289AccF82350c8d8487fedB8A0C07
+        const OMG = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xd26114cd6EE289AccF82350c8d8487fedB8A0C07&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
+        // contract address for REN 0x408e41876cccdc0f92210600ef50372656052a38
+        const REN = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x408e41876cccdc0f92210600ef50372656052a38&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
+        // contract address for ZRX 0xe41d2489571d322189246dafa5ebde1f4699f498
+        const ZRX = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xe41d2489571d322189246dafa5ebde1f4699f498&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
+        // contract address for BAT 0x0d8775f648430679a709e98d2b0cb6250d2887ef
+        const BAT = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x0d8775f648430679a709e98d2b0cb6250d2887ef&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
+        // contract address for BNT 0x1f573d6fb3f13d689ff844b4ce37794d79a7ff1c
+        const BNT = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x1f573d6fb3f13d689ff844b4ce37794d79a7ff1c&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
+        // contract address for KNC 0xdd974d5c2e2928dea5f71b9825b8b646686bd200
+        const KNC = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xdd974d5c2e2928dea5f71b9825b8b646686bd200&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
+        // contract address for DAI 0x6b175474e89094c44da98b954eedeac495271d0f
+        const DAI = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x6b175474e89094c44da98b954eedeac495271d0f&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
+        // contract address for LEND 0x80fB784B7eD66730e8b1DBd9820aFD29931aab03
+        const LEND = await fetch('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x80fB784B7eD66730e8b1DBd9820aFD29931aab03&address=' + DAOWallet + '&tag=latest&apikey=' + EtherScanKey).then(response => response.json());
+        
+        const wallet = '```' +
+                        '\nETH          ' + (ETH.result/1,000,000,000,000,000,000) +
+                        '\nUSDC         ' + (USDC.result/1000000) +
+                        '\nMKR          ' + (MKR.result/1000000000000000000) +
+                        '\nBAL          ' + (BAL.result/1000000000000000000) +
+                        '\nOMG          ' + (OMG.result/1000000000000000000) +
+                        '\nREN          ' + (REN.result/1000000000000000000) +
+                        '\nZRX          ' + (ZRX.result/1000000000000000000) +
+                        '\nBAT          ' + (BAT.result/1000000000000000000) + 
+                        '\nBNT          ' + (BNT.result/1000000000000000000) +
+                        '\nKNC          ' + (KNC.result/1000000000000000000) +
+                        '\nDAI          ' + (DAI.result/1000000000000000000) +
+                        '\nLEND         ' + (LEND.result/1000000000000000000)+
+                        '\n```';
+        
+        return wallet;
+
+    } catch(error) {
+        return error.message;
+    } // end try/catch block
+
+        
+
+} // end walletContents function
+
 
 
 
 // * * * THIS NEEDS TO BE THE LAST LINE IN THE FILE * * * 
-reporterBot.login(BotToken);
+client.login(BotToken);
