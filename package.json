@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/MattisTrees/ReporterBot#readme",
   "dependencies": {
+    "coingecko-api": "^1.0.10",
     "discord.js": "^12.3.1"
   }
 }
