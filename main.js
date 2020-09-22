@@ -10,11 +10,11 @@ const CoinGeckoClient = new CoinGecko();
 // Channel Id for reserve-report: 754436028894544034
 
 // APIKEY
-const EtherScanKey = 'PSHAVQ37TYFF7R369R4X5YJ49Q1WCISQ4Q';
+const EtherScanKey = '';
 // Wallet Address
-const DAOWallet = '0xce5dcffb2aa50deeb229881a294f0b79d41baaeb';
+const DAOWallet = '';
 // Discord bot token
-const BotToken = 'NzU0NDM4MjMwMTU3Mjk1Njc5.X10vWg.6d6n6lzYY1igyjh-rVh3gbNGcFo';
+const BotToken = '';
 
 divisor = 1000000000000000000;
 
